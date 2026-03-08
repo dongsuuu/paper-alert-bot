@@ -2,6 +2,7 @@ import os
 import re
 import html
 import requests
+from datetime import datetime
 from xml.etree import ElementTree as ET
 
 BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
@@ -67,6 +68,7 @@ TOP_JOURNALS_STRONG = {
     "Nature Communications", "Science Advances", "Science Translational Medicine",
     "Neuron", "Brain", "Blood", "The Journal of Clinical Investigation",
     "JCI Insight", "Pain", "Cell Reports Medicine", "Cell Reports",
+    "Proceedings of the National Academy of Sciences of the United States of America",
     "PNAS",
 }
 
@@ -126,9 +128,11 @@ EUTILS_BASE = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
 
 
 def esearch_pubmed(query: str, retmax: int):
+    current_year = datetime.now().year
+    start_year = current_year - 5
     params = {
         "db": "pubmed",
-        "term": f"({query}) AND (\"2021/01/01\"[Date - Publication] : \"3000\"[Date - Publication])",
+        "term": f"({query}) AND (\"{start_year}/01/01\"[Date - Publication] : \"3000\"[Date - Publication])",
         "retmax": retmax,
         "sort": "relevance",
         "retmode": "json",
